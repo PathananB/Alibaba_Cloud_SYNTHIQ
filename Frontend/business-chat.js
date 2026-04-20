@@ -110,3 +110,17 @@ promptButtons.forEach((button) => {
     userInput.focus();
   });
 });
+
+
+async function sendMessage() {
+    const userInput = document.getElementById('user-input').value; // สมมติว่ามี id นี้ใน html
+    
+    const response = await fetch('http://127.0.0.1:8000/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userInput })
+    });
+
+    const data = await response.json();
+    document.getElementById('chat-box').innerText = data.reply; // แสดงคำตอบ AI
+}
