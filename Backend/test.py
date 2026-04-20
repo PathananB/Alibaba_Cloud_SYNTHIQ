@@ -2,10 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 from pydantic import BaseModel
+import json
 
 app = FastAPI()
 
-# ยอมรับการเชื่อมต่อจาก Frontend (แก้ปัญหา CORS)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,12 +23,38 @@ class ChatRequest(BaseModel):
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
+    prompt = f"""
+Analyze this business idea: "{request.message}"
+
+Return ONLY JSON:
+{{
+  "message": "...",
+  "score": "...",
+  "risk": "...",
+  "summary": "..."
+}}
+
+DO NOT include anything outside JSON.
+"""
+
     response = client.chat.completions.create(
         model="qwen3.6-plus",
-        messages=[{"role": "user", "content": request.message}]
+        messages=[{"role": "user", "content": prompt}]
     )
-    return {"reply": response.choices[0].message.content}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    text = response.choices[0].message.content
+
+    # 🔥 กัน AI ตอบมั่ว
+    try:
+        data = json.loads(text)
+    except:
+        import re
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+        data = json.loads(match.group()) if match else {
+            "message": text,
+            "score": "N/A",
+            "risk": "Unknown",
+            "summary": "Parsing failed"
+        }
+
+    return data  # 🔥 ส่ง JSON จริงกลับไปเลย
