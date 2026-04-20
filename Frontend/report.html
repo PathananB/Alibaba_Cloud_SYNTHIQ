@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synthiq AI Report</title>
+  <link rel="stylesheet" href="report.css" />
+</head>
+<body>
+  <div class="report-page">
+    <header class="report-header">
+      <div>
+        <h1>Synthiq AI Insight Report</h1>
+        <p>Structured business report generated from the business chat conversation.</p>
+      </div>
+      <div class="header-actions">
+        <a href="business-chat.html" class="back-btn">Back to Chat</a>
+        <button class="pdf-btn" onclick="window.print()">Export PDF</button>
+      </div>
+    </header>
+
+    <main class="report-container">
+      <section class="report-card">
+        <h2>Business Opportunity Overview</h2>
+        <p id="overviewText">
+          No generated data yet. Start a conversation in Business Chat to generate a business opportunity report.
+        </p>
+      </section>
+
+      <section class="grid-section">
+        <div class="report-card">
+          <h3>Investment Score</h3>
+          <div class="score-box" id="reportScore">--</div>
+        </div>
+
+        <div class="report-card">
+          <h3>Risk Level</h3>
+          <div class="risk-box" id="reportRisk">--</div>
+        </div>
+      </section>
+
+      <section class="report-card">
+        <h2>Insight Report</h2>
+        <p id="insightText">
+          AI-generated insight summary will appear here after the business analysis is completed.
+        </p>
+      </section>
+
+      <section class="report-card">
+        <h2>Recommended Next Steps</h2>
+        <ul>
+          <li>Validate market demand with customer research.</li>
+          <li>Compare competitors and pricing strategies.</li>
+          <li>Estimate startup costs and expected return.</li>
+          <li>Build a launch strategy for digital channels.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("synthiqReport"));
+
+    if (data) {
+      document.getElementById("overviewText").textContent = data.message;
+      document.getElementById("reportScore").textContent = data.score;
+      document.getElementById("reportRisk").textContent = data.risk;
+      document.getElementById("insightText").textContent = data.summary;
+    }
+  </script>
+</body>
+</html>

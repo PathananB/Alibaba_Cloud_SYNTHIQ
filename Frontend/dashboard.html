@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synthiq AI Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="logo-wrap">
+        <div class="logo-box">SA</div>
+        <div>
+          <h2>Synthiq AI</h2>
+          <p>Guest Mode</p>
+        </div>
+      </div>
+
+      <a href="business-chat.html" class="new-chat-btn">+ New Chat</a>
+
+      <nav class="menu">
+        <a href="#" class="menu-item active">Dashboard</a>
+        <a href="business-chat.html" class="menu-item">Business Chat</a>
+        <a href="report.html" class="menu-item">Reports</a>
+        <a href="login.html" class="menu-item">Log In</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="header-card">
+        <div>
+          <h1>Welcome to Synthiq AI Dashboard</h1>
+          <p>You are currently using guest mode. Chat history is not saved until you log in.</p>
+        </div>
+        <a href="business-chat.html" class="header-btn">Start New Chat</a>
+      </div>
+
+      <section class="empty-history-card">
+        <div class="empty-icon">💬</div>
+        <h2>No Chat History Yet</h2>
+        <p>
+          Because you entered without logging in, your previous chats will not appear here.
+          Start a new conversation to analyze business ideas, markets, risks, and investment opportunities.
+        </p>
+        <a href="business-chat.html" class="primary-btn">NEW CHAT</a>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synthiq AI Business Chat</title>
+  <link rel="stylesheet" href="business-chat.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="logo-wrap">
+        <div class="logo-box">SA</div>
+        <div class="logo-text">
+          <h2>Synthiq AI</h2>
+          <p>Business Assistant</p>
+        </div>
+      </div>
+
+      <a href="business-chat.html" class="new-chat-btn">+ New Chat</a>
+
+      <nav class="menu">
+        <a href="dashboard.html" class="menu-item">Dashboard</a>
+        <a href="business-chat.html" class="menu-item active">Business Chat</a>
+        <a href="report.html" class="menu-item">Report</a>
+      </nav>
+
+      <div class="recent-section">
+        <h3>Recent Chats</h3>
+        <div class="recent-list">
+          <div class="recent-item disabled">No saved chats in guest mode</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="chat-main">
+      <header class="chat-header">
+        <div>
+          <h1>SYNTHIQ AI BUSINESS CHAT</h1>
+          <p>Ask about investment, market potential, growth, risk, and business insights.</p>
+        </div>
+        <a href="report.html" class="report-link">Open Report</a>
+      </header>
+
+      <section class="quick-prompts">
+        <button type="button" class="prompt-btn">Analyze my business idea</button>
+        <button type="button" class="prompt-btn">Investment opportunity</button>
+        <button type="button" class="prompt-btn">Market growth</button>
+        <button type="button" class="prompt-btn">Risk analysis</button>
+      </section>
+
+      <section class="chat-area" id="chatArea">
+        <div class="message ai">
+          <div class="avatar">AI</div>
+          <div class="bubble">
+            Hello, I’m Synthiq AI. Tell me your business idea, target country, and industry. I can generate investment insights, risk level, business outlook, and a structured report.
+          </div>
+        </div>
+      </section>
+
+      <form class="chat-input-area" id="chatForm">
+        <input
+          type="text"
+          id="userInput"
+          placeholder="Example: I want to invest in an online clothing business in Vietnam"
+        />
+        <button type="submit">Send</button>
+      </form>
+    </main>
+
+    <aside class="insight-panel">
+      <div class="panel-card">
+        <h3>Live Insight</h3>
+        <div class="big-number" id="scoreValue">--</div>
+        <p>Investment score will appear here after AI response.</p>
+      </div>
+
+      <div class="panel-card">
+        <h3>Risk Level</h3>
+        <div class="tag" id="riskValue">--</div>
+        <p>Estimated business risk will be updated automatically.</p>
+      </div>
+
+      <div class="panel-card">
+        <h3>Report Summary</h3>
+        <p id="reportSummary">
+          The AI-generated business summary will appear here and can later be expanded in the report page.
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <script src="business-chat.js"></script>
+</body>
+</html>
