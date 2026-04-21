@@ -231,25 +231,7 @@ body {
   border-top-right-radius: 6px;
 }
 
-.chat-input-area {
-  display: flex;
-  gap: 14px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
 
-.chat-input-area input {
-  flex: 1;
-  height: 58px;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
-  background: rgba(255,255,255,0.06);
-  color: #ffffff;
-  padding: 0 18px;
-  outline: none;
-  font-family: inherit;
-  font-size: 1rem;
-}
 
 .chat-input-area input::placeholder {
   color: rgba(255,255,255,0.55);

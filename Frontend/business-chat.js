@@ -1,5 +1,4 @@
 const chatForm = document.getElementById("chatForm");
-const userInput = document.getElementById("userInput");
 const chatArea = document.getElementById("chatArea");
 
 const scoreValue = document.getElementById("scoreValue");
@@ -26,93 +25,67 @@ function addAiMessage(text) {
 }
 
 /* =========================
-    🔥 CALL FASTAPI BACKEND
+   CALL BACKEND
 ========================= */
-async function getAIResponse(message) {
-  try {
-    const res = await fetch("http://127.0.0.1:8000/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message: message })
-    });
+async function sendToBackend(payload) {
+  const res = await fetch("http://127.0.0.1:8000/analyze", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
 
-    const data = await res.json();
-    console.log("AI RESPONSE:", data);
-    return data;
-  } catch (err) {
-    console.error("API ERROR:", err);
-    return null;
-  }
+  return await res.json();
 }
 
 /* =========================
-    🔥 UPDATED MAIN FLOW (COMPLETE VERSION)
+   MAIN FLOW
 ========================= */
-async function handleSendMessage(message) {
-  addUserMessage(message);
+chatForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-  // 1. สร้างสถานะ Loading
+  // 👉 ดึงค่าจาก form
+  const payload = {
+    business_type: document.getElementById("business_type").value,
+    country: document.getElementById("country").value,
+    city: document.getElementById("city").value,
+    budget: Number(document.getElementById("budget").value) || 100000,
+    target_customer: document.getElementById("target_customer").value,
+    competitor_level: document.getElementById("competitor_level").value
+  };
+
+  addUserMessage(`Analyze: ${payload.business_type} in ${payload.city}`);
+
   const loading = document.createElement("div");
   loading.className = "message ai";
   loading.innerHTML = `
     <div class="avatar">AI</div>
-    <div class="bubble">Thinking...</div>
+    <div class="bubble">Analyzing...</div>
   `;
   chatArea.appendChild(loading);
-  chatArea.scrollTop = chatArea.scrollHeight;
 
-  // 2. เรียกข้อมูลจาก Backend
-  const data = await getAIResponse(message);
-  
-  // 3. ลบสถานะ Loading ออก
-  chatArea.removeChild(loading);
+  try {
+    const data = await sendToBackend(payload);
+    loading.remove();
 
-  if (data) {
-    // 4. แสดงข้อความตอบกลับหลักจาก AI เสมอ [cite: 60]
-    addAiMessage(data.message);
+    addAiMessage(data.message || "Analysis completed");
 
-    // 5. เช็คว่ามีข้อมูลสำหรับการทำ Report หรือไม่ (Score > 10)
-    // เพื่อให้คุยได้ต่อเนื่องโดยไม่แสดง Summary Card ทุกครั้งที่ข้อมูลยังไม่ครบ [cite: 47, 60]
-    if (data.score && parseFloat(data.score) > 10) { 
-        
-        // อัปเดต UI Dashboard ด้านข้าง 
-        if (scoreValue) scoreValue.textContent = data.score;
-        if (riskValue) riskValue.textContent = data.risk;
-        if (reportSummary) reportSummary.textContent = data.summary;
+    // update dashboard
+    scoreValue.textContent = data.score ?? "--";
+    riskValue.textContent = data.risk ?? "--";
+    reportSummary.textContent = data.summary ?? "No summary";
 
-        // บันทึกข้อมูลลง localStorage เพื่อใช้ในหน้า report.html 
-        const reportData = {
-          message: data.message,
-          score: data.score,
-          risk: data.risk,
-          summary: data.summary,
-          timestamp: new Date().toLocaleString()
-        };
-        localStorage.setItem("synthiqReport", JSON.stringify(reportData));
+    // save report
+    localStorage.setItem("synthiqReport", JSON.stringify(data));
 
-        // แสดง Summary Card สั้นๆ เพื่อบอกว่าวิเคราะห์คืบหน้าไปถึงไหนแล้ว [cite: 47]
-        addAiMessage(`
-          📊 **Analysis Updated**
-          <br>Current Investment Score: ${data.score} | Risk Level: ${data.risk}
-          <br><br>
-          *Check the Reports section for more details.*
-        `);
-    }
-  } else {
-    addAiMessage("❌ Error: Connection failed. Please try again.");
+    addAiMessage(`
+      📊 Score: ${data.score} <br>
+      ⚠ Risk: ${data.risk}
+    `);
+
+  } catch (err) {
+    loading.remove();
+    addAiMessage("❌ Error connecting to backend");
   }
-}
-
-/* =========================
-    🔥 EVENTS
-========================= */
-chatForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const msg = userInput.value.trim();
-  if (!msg) return;
-
-  handleSendMessage(msg);
-  userInput.value = "";
 });

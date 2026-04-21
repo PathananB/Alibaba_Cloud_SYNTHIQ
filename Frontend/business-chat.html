@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Synthiq AI Business Chat</title>
   <link rel="stylesheet" href="business-chat.css" />
 </head>
+
 <body>
   <div class="app-layout">
     <aside class="sidebar">
@@ -37,7 +39,7 @@
       <header class="chat-header">
         <div>
           <h1>SYNTHIQ AI BUSINESS CHAT</h1>
-          <p>Ask about investment, market potential, growth, risk, and business insights.</p>
+          <p>Fill in the business form below to generate investment insights, risk level, and a structured report.</p>
         </div>
         <a href="report.html" class="report-link">Open Report</a>
       </header>
@@ -53,18 +55,55 @@
         <div class="message ai">
           <div class="avatar">AI</div>
           <div class="bubble">
-            Hello, I’m Synthiq AI. Tell me your business idea, target country, and industry. I can generate investment insights, risk level, business outlook, and a structured report.
+            Hello, I’m Synthiq AI. Please fill in your business details below. I will evaluate the opportunity, estimate
+            the investment score, assess the risk level, and generate a summary for your report.
           </div>
         </div>
       </section>
 
       <form class="chat-input-area" id="chatForm">
-        <input
-          type="text"
-          id="userInput"
-          placeholder="Example: I want to invest in an online clothing business in Vietnam"
-        />
-        <button type="submit">Send</button>
+        <select id="business_type" required>
+          <option value="">Select Business Type</option>
+          <option value="coffee shop">Coffee Shop</option>
+          <option value="restaurant">Restaurant</option>
+          <option value="bubble tea">Bubble Tea</option>
+          <option value="fashion">Fashion</option>
+        </select>
+
+        <select id="country" required>
+          <option value="">Select Country</option>
+          <option value="Thailand">Thailand</option>
+          <option value="Vietnam">Vietnam</option>
+          <option value="Indonesia">Indonesia</option>
+          <option value="Singapore">Singapore</option>
+        </select>
+
+        <select id="city" required>
+          <option value="">Select City</option>
+          <option value="Bangkok">Bangkok</option>
+          <option value="Chiang Mai">Chiang Mai</option>
+          <option value="Ho Chi Minh City">Ho Chi Minh City</option>
+          <option value="Hanoi">Hanoi</option>
+        </select>
+
+        <input type="number" id="budget" placeholder="Enter Budget (e.g. 100000)" required />
+
+        <select id="target_customer" required>
+          <option value="">Select Target Customer</option>
+          <option value="students">Students</option>
+          <option value="young professionals">Young Professionals</option>
+          <option value="families">Families</option>
+          <option value="tourists">Tourists</option>
+        </select>
+
+        <select id="competitor_level" required>
+          <option value="">Select Competition Level</option>
+          <option value="low">Low Competition</option>
+          <option value="medium">Medium Competition</option>
+          <option value="high">High Competition</option>
+        </select>
+
+        <button type="submit">Analyze Business</button>
       </form>
     </main>
 
@@ -72,7 +111,7 @@
       <div class="panel-card">
         <h3>Live Insight</h3>
         <div class="big-number" id="scoreValue">--</div>
-        <p>Investment score will appear here after AI response.</p>
+        <p>Investment score will appear here after analysis.</p>
       </div>
 
       <div class="panel-card">
@@ -92,4 +131,5 @@
 
   <script src="business-chat.js"></script>
 </body>
+
 </html>
