@@ -45,23 +45,38 @@
       </header>
 
       <section class="quick-prompts">
-        <button type="button" class="prompt-btn">Analyze my business idea</button>
-        <button type="button" class="prompt-btn">Investment opportunity</button>
-        <button type="button" class="prompt-btn">Market growth</button>
-        <button type="button" class="prompt-btn">Risk analysis</button>
+        <button type="button" class="prompt-btn" data-fill="starter">Starter Business</button>
+        <button type="button" class="prompt-btn" data-fill="coffee">Coffee Shop</button>
+        <button type="button" class="prompt-btn" data-fill="fashion">Fashion Brand</button>
+        <button type="button" class="prompt-btn" data-fill="bubble">Bubble Tea</button>
       </section>
 
       <section class="chat-area" id="chatArea">
         <div class="message ai">
           <div class="avatar">AI</div>
           <div class="bubble">
-            Hello, I’m Synthiq AI. Please fill in your business details below. I will evaluate the opportunity, estimate
-            the investment score, assess the risk level, and generate a summary for your report.
+            <strong>Welcome to Synthiq AI</strong><br><br>
+            Fill in your business details below and I will generate:
+            <br>• Investment Score
+            <br>• Risk Level
+            <br>• Business Summary
+            <br>• Actionable Recommendations
           </div>
         </div>
       </section>
+<div class="form-shell" id="formShell">
+  <div class="form-toolbar">
+    <span class="form-title">Business Form</span>
+    <button type="button" class="toggle-form-btn" id="toggleFormBtn">
+      <span id="toggleFormText">Hide Form</span>
+      <span class="toggle-arrow" id="toggleArrow"></span>
+    </button>
+  </div>
 
-      <form class="chat-input-area" id="chatForm">
+  <div class="form-card" id="formCard">
+    <form class="chat-input-area" id="chatForm">
+      <div class="field-group">
+        <label for="business_type">Business Type</label>
         <select id="business_type" required>
           <option value="">Select Business Type</option>
           <option value="coffee shop">Coffee Shop</option>
@@ -69,41 +84,59 @@
           <option value="bubble tea">Bubble Tea</option>
           <option value="fashion">Fashion</option>
         </select>
+      </div>
 
-        <select id="country" required>
-          <option value="">Select Country</option>
-          <option value="Thailand">Thailand</option>
-          <option value="Vietnam">Vietnam</option>
-          <option value="Indonesia">Indonesia</option>
-          <option value="Singapore">Singapore</option>
-        </select>
+        <div class="field-group">
+          <label for="country">Country</label>
+          <select id="country" required>
+            <option value="">Select Country</option>
+            <option value="Thailand">Thailand</option>
+            <option value="Vietnam">Vietnam</option>
+            <option value="Indonesia">Indonesia</option>
+            <option value="Singapore">Singapore</option>
+          </select>
+        </div>
 
-        <select id="city" required>
-          <option value="">Select City</option>
-          <option value="Bangkok">Bangkok</option>
-          <option value="Chiang Mai">Chiang Mai</option>
-          <option value="Ho Chi Minh City">Ho Chi Minh City</option>
-          <option value="Hanoi">Hanoi</option>
-        </select>
+        <div class="field-group">
+          <label for="city">City</label>
+          <select id="city" required>
+            <option value="">Select Market Type</option>
+            <option value="tier1">Tier 1 City (Major City)</option>
+            <option value="tier2">Tier 2 City (Developing City)</option>
+            <option value="tier3">Tier 3 City (Emerging Area)</option>
+          </select>
+        </div>
 
-        <input type="number" id="budget" placeholder="Enter Budget (e.g. 100000)" required />
+        <div class="field-group">
+          <label for="budget">Budget (USD)</label>
+          <input type="number" id="budget" placeholder="e.g. 5000 (USD)" required />
+        </div>
 
-        <select id="target_customer" required>
-          <option value="">Select Target Customer</option>
-          <option value="students">Students</option>
-          <option value="young professionals">Young Professionals</option>
-          <option value="families">Families</option>
-          <option value="tourists">Tourists</option>
-        </select>
+        <div class="field-group">
+          <label for="target_customer">Target Customer</label>
+          <select id="target_customer" required>
+            <option value="">Select Target Customer</option>
+            <option value="students">Students</option>
+            <option value="young professionals">Young Professionals</option>
+            <option value="families">Families</option>
+            <option value="tourists">Tourists</option>
+          </select>
+        </div>
 
-        <select id="competitor_level" required>
-          <option value="">Select Competition Level</option>
-          <option value="low">Low Competition</option>
-          <option value="medium">Medium Competition</option>
-          <option value="high">High Competition</option>
-        </select>
+        <div class="field-group">
+          <label for="competitor_level">Competition Level</label>
+          <select id="competitor_level" required>
+            <option value="">Select Competition Level</option>
+            <option value="low">Low Competition</option>
+            <option value="medium">Medium Competition</option>
+            <option value="high">High Competition</option>
+          </select>
+        </div>
 
-        <button type="submit">Analyze Business</button>
+        <div class="form-actions">
+          <button type="button" class="secondary-btn" id="resetBtn">Reset</button>
+          <button type="submit" class="primary-btn" id="analyzeBtn">Analyze Business</button>
+        </div>
       </form>
     </main>
 

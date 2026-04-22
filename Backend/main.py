@@ -5,13 +5,12 @@ from pydantic import BaseModel
 import json
 import os
 from dotenv import load_dotenv
+import joblib
+import numpy as np
+import re
 
 load_dotenv()
 
-client = OpenAI(
-    api_key="sk-sp-601cd068acc64f64bfced0eb509d04d4",
-    base_url="https://coding-intl.dashscope.aliyuncs.com/v1"
-)
 app = FastAPI()
 
 app.add_middleware(
@@ -19,6 +18,15 @@ app.add_middleware(
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+# โหลด model
+model = joblib.load("model.pkl")
+
+# สร้าง client สำหรับ Qwen
+client = OpenAI(
+    api_key="sk-sp-601cd068acc64f64bfced0eb509d04d4",
+    base_url="https://coding-intl.dashscope.aliyuncs.com/v1"
 )
 
 class BusinessInput(BaseModel):
@@ -32,29 +40,52 @@ class BusinessInput(BaseModel):
 
 def convert_inputs_to_features(data):
     def demo(x):
-        return {"students": 80, "families": 65, "young professionals": 75, "tourists": 70}.get(x.lower(), 50)
+        return {
+            "students": 80,
+            "families": 65,
+            "young professionals": 75,
+            "tourists": 70
+        }.get(x.lower(), 50)
 
     def trend(x):
-        return {"coffee shop": 75, "restaurant": 72, "bubble tea": 78, "fashion": 70}.get(x.lower(), 50)
+        return {
+            "coffee shop": 75,
+            "restaurant": 72,
+            "bubble tea": 78,
+            "fashion": 70
+        }.get(x.lower(), 50)
 
     def macro(x):
-        return {"thailand": 72, "vietnam": 80, "indonesia": 78, "singapore": 68}.get(x.lower(), 50)
+        return {
+            "thailand": 72,
+            "vietnam": 80,
+            "indonesia": 78,
+            "singapore": 68
+        }.get(x.lower(), 50)
 
     def comp(x):
-        return {"low": 85, "medium": 65, "high": 40}.get(x.lower(), 50)
+        return {
+            "low": 85,
+            "medium": 65,
+            "high": 40
+        }.get(x.lower(), 50)
 
     def loc(x):
-        return {"bangkok": 75, "hanoi": 78, "ho chi minh city": 82, "chiang mai": 68}.get(x.lower(), 50)
+        return {
+            "tier1": 85,
+            "tier2": 70,
+            "tier3": 55
+        }.get(x.lower(), 60)
 
     def fin(b):
-        if b >= 300000:
+        if b >= 10000:
             return 85
-        elif b >= 150000:
+        elif b >= 5000:
             return 70
-        elif b >= 50000:
-            return 55
-        else:
-            return 35
+        elif b >= 2000:
+        return 55
+    else:
+        return 35
 
     return {
         "demographic": demo(data["target_customer"]),
@@ -64,18 +95,6 @@ def convert_inputs_to_features(data):
         "location": loc(data["city"]),
         "financial": fin(data["budget"])
     }
-
-
-def calculate_score(f):
-    score = (
-        f["demographic"] * 0.2 +
-        f["trend"] * 0.2 +
-        f["macro"] * 0.15 +
-        f["competition"] * 0.15 +
-        f["location"] * 0.2 +
-        f["financial"] * 0.1
-    )
-    return round(score, 2)
 
 
 def get_risk(score):
@@ -91,13 +110,17 @@ def build_qwen_prompt(user_data, features, score, risk):
     return f"""
 You are Synthiq AI, a business investment consultant.
 
-Analyze this SME business case based on the real computed score below.
+Respond in a short, clear, and easy-to-read format.
+Use simple language.
+Use short sections and bullet points.
+Do not write long paragraphs.
+Do not change the score.
 
 User Input:
 - Business Type: {user_data["business_type"]}
 - Country: {user_data["country"]}
 - City: {user_data["city"]}
-- Budget: {user_data["budget"]}
+- Budget: ${user_data["budget"]} USD
 - Target Customer: {user_data["target_customer"]}
 - Competition Level: {user_data["competitor_level"]}
 
@@ -113,18 +136,10 @@ Final Computed Result:
 - Investment Score: {score}
 - Risk Grade: {risk}
 
-Instructions:
-1. Explain why this business got this score.
-2. Mention 2 strengths.
-3. Mention 2 risks.
-4. Give 3 actionable recommendations.
-5. Keep the response concise and practical.
-6. Do not invent a different score.
-
 Return ONLY JSON:
 {{
-  "message": "...",
-  "summary": "..."
+  "message": "📊 Investment Score: {score} ({risk})\\n\\n💡 Overview:\\n- ...\\n\\n✅ Strengths:\\n- ...\\n- ...\\n\\n⚠ Risks:\\n- ...\\n- ...\\n\\n🚀 Recommendations:\\n- ...\\n- ...\\n- ...",
+  "summary": "Short 1-2 sentence summary."
 }}
 """
 
@@ -144,7 +159,6 @@ def ask_qwen(prompt: str):
     try:
         return json.loads(text)
     except:
-        import re
         match = re.search(r"\{.*\}", text, re.DOTALL)
         if match:
             return json.loads(match.group())
@@ -158,10 +172,26 @@ def ask_qwen(prompt: str):
 def analyze(data: BusinessInput):
     d = data.dict()
 
+    # แปลง input จากฟอร์ม -> features
     features = convert_inputs_to_features(d)
-    score = calculate_score(features)
+
+    # ใช้ model ทำนาย score
+    model_input = np.array([[
+        features["demographic"],
+        features["trend"],
+        features["macro"],
+        features["competition"],
+        features["location"],
+        features["financial"]
+    ]])
+
+    score = float(model.predict(model_input)[0])
+    score = round(score, 2)
+
+    # หา risk จาก score
     risk = get_risk(score)
 
+    # ส่ง score จริงไปให้ Qwen อธิบาย
     prompt = build_qwen_prompt(d, features, score, risk)
     qwen_result = ask_qwen(prompt)
 
