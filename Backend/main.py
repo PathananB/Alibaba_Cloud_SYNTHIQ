@@ -8,6 +8,13 @@ from dotenv import load_dotenv
 import joblib
 import numpy as np
 import re
+from scoring import (
+    convert_inputs_to_features,
+    get_risk,
+    build_strengths,
+    build_risks,
+    build_recommendations,
+)
 
 load_dotenv()
 
@@ -16,10 +23,10 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # โหลด model
 model = joblib.load("model.pkl")
 
@@ -36,74 +43,6 @@ class BusinessInput(BaseModel):
     budget: float
     target_customer: str
     competitor_level: str
-
-
-def convert_inputs_to_features(data):
-    def demo(x):
-        return {
-            "students": 80,
-            "families": 65,
-            "young professionals": 75,
-            "tourists": 70
-        }.get(x.lower(), 50)
-
-    def trend(x):
-        return {
-            "coffee shop": 75,
-            "restaurant": 72,
-            "bubble tea": 78,
-            "fashion": 70
-        }.get(x.lower(), 50)
-
-    def macro(x):
-        return {
-            "thailand": 72,
-            "vietnam": 80,
-            "indonesia": 78,
-            "singapore": 68
-        }.get(x.lower(), 50)
-
-    def comp(x):
-        return {
-            "low": 85,
-            "medium": 65,
-            "high": 40
-        }.get(x.lower(), 50)
-
-    def loc(x):
-        return {
-            "tier1": 85,
-            "tier2": 70,
-            "tier3": 55
-        }.get(x.lower(), 60)
-
-    def fin(b):
-        if b >= 10000:
-            return 85
-        elif b >= 5000:
-            return 70
-        elif b >= 2000:
-        return 55
-    else:
-        return 35
-
-    return {
-        "demographic": demo(data["target_customer"]),
-        "trend": trend(data["business_type"]),
-        "macro": macro(data["country"]),
-        "competition": comp(data["competitor_level"]),
-        "location": loc(data["city"]),
-        "financial": fin(data["budget"])
-    }
-
-
-def get_risk(score):
-    if score >= 75:
-        return "Low"
-    elif score >= 55:
-        return "Medium"
-    else:
-        return "High"
 
 
 def build_qwen_prompt(user_data, features, score, risk):
@@ -191,6 +130,10 @@ def analyze(data: BusinessInput):
     # หา risk จาก score
     risk = get_risk(score)
 
+    strengths = build_strengths(d, features)
+    risks = build_risks(d, features)
+    recommendations = build_recommendations(d, features)
+
     # ส่ง score จริงไปให้ Qwen อธิบาย
     prompt = build_qwen_prompt(d, features, score, risk)
     qwen_result = ask_qwen(prompt)
@@ -199,6 +142,9 @@ def analyze(data: BusinessInput):
         "score": score,
         "risk": risk,
         "features": features,
+        "strengths": strengths,
+        "risks": risks,
+        "recommendations": recommendations,
         "message": qwen_result.get("message", ""),
         "summary": qwen_result.get("summary", "")
-    }
+}
