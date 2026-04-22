@@ -166,7 +166,54 @@ function addUserMessage(text, shouldSave = true) {
   }
 }
 
-function addAiMessage(text, variant = "", shouldSave = true) {
+function formatAiText(text) {
+  if (!text) return "No response.";
+
+  let formatted = text
+    .replace(/\{+/g, "")
+    .replace(/\}+/g, "")
+    .replace(/"message":/g, "")
+    .replace(/\\n/g, "\n")
+    .replace(/\r\n/g, "\n");
+
+  const sections = formatted.split("\n").map(line => line.trim()).filter(Boolean);
+
+  let html = "";
+
+  sections.forEach((line) => {
+    if (line.startsWith("📊 Investment Score:")) {
+      html += `<div class="ai-section-title">📊 Investment Score</div>`;
+      html += `<div class="ai-line">${line.replace("📊 Investment Score:", "").trim()}</div>`;
+    } else if (line.startsWith("💡 Overview:")) {
+      html += `<div class="ai-section-title">💡 Overview</div>`;
+    } else if (line.startsWith("✅ Strengths:")) {
+      html += `<div class="ai-section-title">✅ Strengths</div>`;
+    } else if (line.startsWith("⚠ Risks:")) {
+      html += `<div class="ai-section-title">⚠ Risks</div>`;
+    } else if (line.startsWith("🚀 Recommendations:")) {
+      html += `<div class="ai-section-title">🚀 Recommendations</div>`;
+    } else if (line.startsWith("-")) {
+      html += `<div class="ai-bullet">• ${line.substring(1).trim()}</div>`;
+    } else {
+      html += `<div class="ai-line">${line}</div>`;
+    }
+  });
+
+  return html;
+}
+
+function formatAiSummaryCard(data) {
+  return `
+    <div class="ai-report-card">
+      <div class="ai-report-title">Analysis Updated</div>
+      <div class="ai-report-line">- <strong>Score:</strong> ${data.score ?? "--"}</div>
+      <div class="ai-report-line">- <strong>Risk:</strong> ${data.risk ?? "--"}</div>
+      <div class="ai-report-line">- <strong>Summary:</strong> ${data.summary ?? "No summary available."}</div>
+    </div>
+  `;
+}
+
+function addAiMessage(text, variant = "", shouldSave = true, isHtml = false) {
   const div = document.createElement("div");
   div.className = "message ai";
 
@@ -176,14 +223,14 @@ function addAiMessage(text, variant = "", shouldSave = true) {
 
   div.innerHTML = `
     <div class="avatar">AI</div>
-    <div class="bubble">${text.replace(/\n/g, "<br>")}</div>
+    <div class="bubble">${isHtml ? text : formatAiText(text)}</div>
   `;
 
   chatArea.appendChild(div);
   chatArea.scrollTop = chatArea.scrollHeight;
 
   if (shouldSave) {
-    addMessageToCurrentChat("ai", text);
+    addMessageToCurrentChat("ai", isHtml ? div.querySelector(".bubble").innerText : text);
   }
 }
 
@@ -442,12 +489,8 @@ Competition: ${payload.competitor_level}`;
       loading.remove();
       setLoadingState(false);
 
-      addAiMessage(`📊 Investment Analysis Result
-
-Score: ${data.score}
-Risk: ${data.risk}
-
-${data.message}`);
+      addAiMessage(data.message);
+      addAiMessage(formatAiSummaryCard(data), "", true, true);
 
       scoreValue.textContent = data.score ?? "--";
       scoreValue.style.transform = "scale(1.1)";
