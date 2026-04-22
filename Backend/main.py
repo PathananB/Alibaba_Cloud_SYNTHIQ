@@ -4,6 +4,7 @@ from openai import OpenAI
 from pydantic import BaseModel
 import json
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 import joblib
 import numpy as np
@@ -16,7 +17,8 @@ from scoring import (
     build_recommendations,
 )
 
-load_dotenv()
+# โหลด .env ให้ถูก path
+load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
 app = FastAPI()
 
@@ -34,7 +36,9 @@ client = OpenAI(
     api_key="sk-sp-601cd068acc64f64bfced0eb509d04d4",
     base_url="https://coding-intl.dashscope.aliyuncs.com/v1"
 )
+
 SERPAPI_KEY = os.getenv("SERPAPI_KEY")
+print("🔑 SERPAPI_KEY loaded:", SERPAPI_KEY[:5] if SERPAPI_KEY else "NOT FOUND")
 
 
 class BusinessInput(BaseModel):
@@ -111,7 +115,7 @@ def convert_gdp_to_macro_score(gdp_growth: float) -> float:
         return 45
 
 
-def fetch_serpapi_trend_score(business_type: str, country_name: str) -> float:
+def fetch_serpapi_trend_score(business_type: str, country_name: str):
     fallback = {
         "coffee shop": 75,
         "restaurant": 72,
@@ -120,7 +124,8 @@ def fetch_serpapi_trend_score(business_type: str, country_name: str) -> float:
     }
 
     if not SERPAPI_KEY:
-        return fallback.get(str(business_type).lower(), 50)
+        print("⚠️ SERPAPI_KEY not found, using fallback")
+        return fallback.get(str(business_type).lower(), 50), None
 
     query_map = {
         "coffee shop": "coffee shop",
@@ -157,23 +162,27 @@ def fetch_serpapi_trend_score(business_type: str, country_name: str) -> float:
 
         if values:
             avg_interest = sum(values) / len(values)
+            print(f"✅ SerpAPI returned {len(values)} points, avg={avg_interest:.1f}")
 
-            # normalize to your scoring style
             if avg_interest >= 80:
-                return 85
+                score = 85
             elif avg_interest >= 60:
-                return 75
+                score = 75
             elif avg_interest >= 40:
-                return 65
+                score = 65
             elif avg_interest >= 20:
-                return 55
+                score = 55
             else:
-                return 45
+                score = 45
 
-        return fallback.get(str(business_type).lower(), 50)
+            return score, round(avg_interest, 1)
+
+        print("⚠️ SerpAPI empty timeline, using fallback")
+        return fallback.get(str(business_type).lower(), 50), None
+
     except Exception as e:
         print("SerpAPI trend error:", e)
-        return fallback.get(str(business_type).lower(), 50)
+        return fallback.get(str(business_type).lower(), 50), None
 
 
 def convert_inputs_to_features(data):
@@ -216,11 +225,12 @@ def convert_inputs_to_features(data):
 
     gdp_growth = fetch_gdp_growth(data["country"])
     macro_score = convert_gdp_to_macro_score(gdp_growth)
-    trend_score = fetch_serpapi_trend_score(data["business_type"], data["country"])
+    trend_score, trend_raw = fetch_serpapi_trend_score(data["business_type"], data["country"])
 
     return {
         "demographic": demo(data["target_customer"]),
         "trend": trend_score,
+        "trend_raw": trend_raw,
         "macro": macro_score,
         "competition": comp(data["competitor_level"]),
         "location": loc(data["city"]),
@@ -239,42 +249,10 @@ def get_risk(score):
 
 
 def build_qwen_prompt(user_data, features, score, risk):
-    return f"""
-You are Synthiq AI, a business investment consultant.
-
-Respond in a short, clear, and easy-to-read format.
-Use simple language.
-Use short sections and bullet points.
-Do not write long paragraphs.
-Do not change the score.
-
-User Input:
-- Business Type: {user_data["business_type"]}
-- Country: {user_data["country"]}
-- City: {user_data["city"]}
-- Budget: ${user_data["budget"]} USD
-- Target Customer: {user_data["target_customer"]}
-- Competition Level: {user_data["competitor_level"]}
-
-Computed Features:
-- Demographic Score: {features["demographic"]}
-- Trend Score: {features["trend"]}
-- Macro Score: {features["macro"]}
-- GDP Growth: {features.get("gdp_growth", 0.0)}%
-- Competition Score: {features["competition"]}
-- Location Score: {features["location"]}
-- Financial Score: {features["financial"]}
-
-Final Computed Result:
-- Investment Score: {score}
-- Risk Grade: {risk}
-
-Return ONLY JSON:
-{{
-  "message": "📊 Investment Score: {score} ({risk})\\n\\n💡 Overview:\\n- ...\\n\\n✅ Strengths:\\n- ...\\n- ...\\n\\n⚠ Risks:\\n- ...\\n- ...\\n\\n🚀 Recommendations:\\n- ...\\n- ...\\n- ...",
-  "summary": "Short 1-2 sentence summary."
-}}
-"""
+    return f"""You are Synthiq AI. Reply ONLY in JSON below, no extra text.
+{{"message":"📊 Score:{score}({risk})\\n💡 Overview: [1 sentence]\\n✅ Strength: [1 point]\\n⚠ Risk: [1 point]\\n🚀 Tip: [1 point]","summary":"[1 sentence]"}}
+Business:{user_data["business_type"]},{user_data["city"]},{user_data["country"]},${user_data["budget"]},{user_data["target_customer"]},{user_data["competitor_level"]}
+Scores: trend={features["trend"]},macro={features["macro"]},competition={features["competition"]},financial={features["financial"]},score={score},risk={risk}"""
 
 
 def ask_qwen(prompt: str):
@@ -287,14 +265,14 @@ def ask_qwen(prompt: str):
     response = client.chat.completions.create(
         model="qwen3.6-plus",
         messages=[
-            {"role": "system", "content": "You are a clear and practical SME investment analyst."},
+            {"role": "system", "content": "You are a clear and practical SME investment analyst. Reply ONLY valid JSON."},
             {"role": "user", "content": prompt}
         ],
         temperature=0.3,
-        max_tokens=220
+        max_tokens=200
     )
 
-    text = response.choices[0].message.content
+    text = response.choices[0].message.content.strip()
 
     try:
         return json.loads(text)
@@ -307,8 +285,8 @@ def ask_qwen(prompt: str):
                 pass
 
         return {
-            "message": text,
-            "summary": "Parsing failed"
+            "message": text if text else "Analysis complete.",
+            "summary": text[:120] if text else "Analysis complete."
         }
 
 
