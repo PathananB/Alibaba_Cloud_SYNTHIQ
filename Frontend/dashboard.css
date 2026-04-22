@@ -1,226 +1,239 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Prompt', sans-serif;
-    background: #000;
-    color: #fff;
-  }
-  
-  .dashboard-layout {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .sidebar {
-    background: linear-gradient(180deg, #07135e 0%, #030926 100%);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 24px;
-    padding: 22px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  
-  .logo-wrap {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  
-  .logo-box {
-    width: 62px;
-    height: 62px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 800;
-    background: #000;
-    border: 2px solid rgba(255,255,255,0.35);
-  }
-  
-  .logo-wrap h2 {
-    font-size: 1.2rem;
-  }
-  
-  .logo-wrap p {
-    color: rgba(255,255,255,0.7);
-    font-size: 0.92rem;
-  }
-  
-  .new-chat-btn,
-  .primary-btn,
-  .header-btn {
-    text-decoration: none;
-    text-align: center;
-    padding: 14px 18px;
-    border-radius: 16px;
-    background: linear-gradient(90deg, #1e8fff, #47dfff);
-    color: #00152f;
-    font-weight: 700;
-  }
-  
-  .menu {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .menu-item {
-    text-decoration: none;
-    color: #fff;
-    padding: 13px 15px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.04);
-  }
-  
-  .menu-item.active {
-    background: rgba(71, 223, 255, 0.12);
-    border: 1px solid rgba(71, 223, 255, 0.3);
-  }
-  
-  .main-content {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .header-card,
-  .empty-history-card {
-    background: linear-gradient(180deg, #071d8a 0%, #03104c 100%);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 24px;
-  }
-  
-  .header-card {
-    padding: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-  }
-  
-  .header-card h1 {
-    font-size: clamp(1.5rem, 3vw, 2.3rem);
-    margin-bottom: 8px;
-  }
-  
-  .header-card p {
-    color: rgba(255,255,255,0.75);
-    line-height: 1.7;
-  }
-  
-  .empty-history-card {
-    flex: 1;
-    min-height: 520px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    text-align: center;
-  }
-  
-  .empty-icon {
-    font-size: 4rem;
-    margin-bottom: 16px;
-  }
-  
-  .empty-history-card h2 {
-    font-size: 2rem;
-    margin-bottom: 12px;
-  }
-  
-  .empty-history-card p {
-    max-width: 650px;
-    color: rgba(255,255,255,0.78);
-    line-height: 1.8;
-    margin-bottom: 28px;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  .history-card-wrapper {
-    background: linear-gradient(180deg, #071d8a 0%, #03104c 100%);
-    border-radius: 24px;
-    padding: 24px;
-  }
-  
-  #chatHistoryList {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .chat-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 16px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  
-  .chat-card:hover {
-    background: rgba(255,255,255,0.1);
-    transform: translateY(-2px);
-  }
-  
-  .chat-title {
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-  
-  .chat-preview {
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.7);
-  }
-  
-  .chat-date {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.5);
-    margin-top: 8px;
-  }
+body {
+  font-family: 'Prompt', sans-serif;
+  background: #000;
+  color: #fff;
+}
 
-  /* Animation สำหรับจุดไข่ปลา */
+.dashboard-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, #07135e 0%, #030926 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-box {
+  width: 62px;
+  height: 62px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: #000;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.logo-wrap h2 {
+  font-size: 1.2rem;
+}
+
+.logo-wrap p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.92rem;
+}
+
+.new-chat-btn,
+.primary-btn,
+.header-btn {
+  text-decoration: none;
+  text-align: center;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #1e8fff, #47dfff);
+  color: #00152f;
+  font-weight: 700;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu-item {
+  text-decoration: none;
+  color: #fff;
+  padding: 13px 15px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.menu-item.active {
+  background: rgba(71, 223, 255, 0.12);
+  border: 1px solid rgba(71, 223, 255, 0.3);
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header-card,
+.empty-history-card {
+  background: linear-gradient(180deg, #071d8a 0%, #03104c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+}
+
+.header-card {
+  padding: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-card h1 {
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  margin-bottom: 8px;
+}
+
+.header-card p {
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
+}
+
+.empty-history-card {
+  flex: 1;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.empty-history-card h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.empty-history-card p {
+  max-width: 650px;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.history-card-wrapper {
+  background: linear-gradient(180deg, #071d8a 0%, #03104c 100%);
+  border-radius: 24px;
+  padding: 24px;
+}
+
+#chatHistoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.chat-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.chat-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.chat-preview {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.chat-date {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 8px;
+}
+
+/* Animation สำหรับจุดไข่ปลา */
 .active-typing .dot {
   animation: blink 1.4s infinite both;
   font-weight: bold;
   font-size: 1.2rem;
 }
 
-.active-typing .dot:nth-child(2) { animation-delay: 0.2s; }
-.active-typing .dot:nth-child(3) { animation-delay: 0.4s; }
+.active-typing .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.active-typing .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
 @keyframes blink {
-  0% { opacity: 0.2; }
-  20% { opacity: 1; }
-  100% { opacity: 0.2; }
+  0% {
+    opacity: 0.2;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
 }
 
 /* ปรับแต่ง Bubble เพิ่มเติมให้ดูนุ่มนวล */
 .bubble {
   line-height: 1.5;
-  white-space: pre-wrap; /* เพื่อให้รองรับการขึ้นบรรทัดใหม่จาก AI */
+  white-space: pre-wrap;
+  /* เพื่อให้รองรับการขึ้นบรรทัดใหม่จาก AI */
   word-wrap: break-word;
 }
 
-  
-  @media (max-width: 860px) {
-    .dashboard-layout {
-      grid-template-columns: 1fr;
-      padding: 14px;
-    }
-  
-    .header-card {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+
+@media (max-width: 860px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+    padding: 14px;
   }
 
+  .header-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

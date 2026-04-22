@@ -126,6 +126,7 @@ body {
 }
 
 .menu-item {
+  display: block;
   text-decoration: none;
   color: #ffffff;
   padding: 13px 15px;
@@ -159,10 +160,9 @@ body {
 }
 
 .recent-item {
-  color: rgba(255, 255, 255, 0.88);
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .disabled {
@@ -229,7 +229,6 @@ body {
   padding: 18px 24px 12px;
 }
 
-/* QUICK PROMPT BUTTONS */
 .prompt-btn {
   border: 1px solid rgba(71, 223, 255, 0.25);
   background: rgba(255, 255, 255, 0.06);
@@ -266,7 +265,6 @@ body {
   gap: 14px;
 }
 
-/* scrollbar */
 .chat-area::-webkit-scrollbar {
   width: 8px;
 }
@@ -281,7 +279,6 @@ body {
   border-radius: 999px;
 }
 
-/* MESSAGE */
 .message {
   display: flex;
   gap: 12px;
@@ -336,12 +333,11 @@ body {
   vertical-align: top;
 }
 
-/* ล้างช่องว่างบน-ล่างของ element ข้างในทั้งหมด */
-.message.user .bubble > *:first-child {
+.message.user .bubble>*:first-child {
   margin-top: 0 !important;
 }
 
-.message.user .bubble > *:last-child {
+.message.user .bubble>*:last-child {
   margin-bottom: 0 !important;
 }
 
@@ -364,7 +360,6 @@ body {
   display: none;
 }
 
-/* FORM SHELL */
 .form-shell {
   flex-shrink: 0;
   padding: 0 24px 24px;
@@ -386,7 +381,6 @@ body {
   color: #fff;
 }
 
-/* TOGGLE BUTTON */
 .toggle-form-btn {
   border: 1px solid rgba(71, 223, 255, 0.25);
   background: rgba(255, 255, 255, 0.05);
@@ -414,7 +408,6 @@ body {
   transition: transform 0.3s ease;
 }
 
-/* FORM CARD */
 .form-card {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -485,18 +478,15 @@ body {
   color: #111;
 }
 
-/* สีพื้น dropdown */
 .chat-input-area select option {
-  background-color: #1d2242; /* สีพื้น */
-  color: #ffffff; /* สีตัวหนังสือ */
+  background-color: #1d2242;
+  color: #ffffff;
 }
 
-/* ตอน hover (บาง browser ใช้ได้) */
 .chat-input-area select option:hover {
   background-color: #2b445e;
 }
 
-/* ตอนเลือก */
 .chat-input-area select option:checked {
   background-color: #ffffff;
   color: #00152f;
@@ -539,7 +529,6 @@ body {
   transform: translateY(-1px);
 }
 
-/* RIGHT PANEL */
 .insight-panel {
   display: flex;
   flex-direction: column;
@@ -582,7 +571,6 @@ body {
   font-size: 0.95rem;
 }
 
-/* RESPONSIVE */
 @media (max-width: 1200px) {
   .app-layout {
     grid-template-columns: 250px 1fr;
@@ -649,7 +637,6 @@ body {
   }
 }
 
-/* AI loading bubble */
 .loading-bubble {
   display: inline-flex;
   align-items: center;
@@ -680,6 +667,7 @@ body {
     transform: translateY(0) scale(0.9);
     opacity: 0.35;
   }
+
   40% {
     transform: translateY(-6px) scale(1.08);
     opacity: 1;

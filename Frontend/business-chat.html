@@ -29,9 +29,7 @@
 
       <div class="recent-section">
         <h3>Recent Chats</h3>
-        <div class="recent-list">
-          <div class="recent-item disabled">No saved chats in guest mode</div>
-        </div>
+        <div class="recent-list"></div>
       </div>
     </aside>
 
@@ -50,83 +48,85 @@
         <button type="button" class="prompt-btn" data-fill="fashion">Fashion Brand</button>
         <button type="button" class="prompt-btn" data-fill="bubble">Bubble Tea</button>
       </section>
-      
-<section class="chat-area" id="chatArea"></section>
 
-<div class="form-shell" id="formShell">
-  <div class="form-toolbar">
-    <span class="form-title">Business Form</span>
-    <button type="button" class="toggle-form-btn" id="toggleFormBtn">
-      <span id="toggleFormText">Hide Form</span>
-      <span class="toggle-arrow" id="toggleArrow"></span>
-    </button>
-  </div>
+      <section class="chat-area" id="chatArea"></section>
 
-  <div class="form-card" id="formCard">
-    <form class="chat-input-area" id="chatForm">
-      <div class="field-group">
-        <label for="business_type">Business Type</label>
-        <select id="business_type" required>
-          <option value="">Select Business Type</option>
-          <option value="coffee shop">Coffee Shop</option>
-          <option value="restaurant">Restaurant</option>
-          <option value="bubble tea">Bubble Tea</option>
-          <option value="fashion">Fashion</option>
-        </select>
+      <div class="form-shell" id="formShell">
+        <div class="form-toolbar">
+          <span class="form-title">Business Form</span>
+          <button type="button" class="toggle-form-btn" id="toggleFormBtn">
+            <span id="toggleFormText">Hide Form</span>
+            <span class="toggle-arrow" id="toggleArrow">⌃</span>
+          </button>
+        </div>
+
+        <div class="form-card" id="formCard">
+          <form class="chat-input-area" id="chatForm">
+            <div class="field-group">
+              <label for="business_type">Business Type</label>
+              <select id="business_type" required>
+                <option value="">Select Business Type</option>
+                <option value="coffee shop">Coffee Shop</option>
+                <option value="restaurant">Restaurant</option>
+                <option value="bubble tea">Bubble Tea</option>
+                <option value="fashion">Fashion</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="country">Country</label>
+              <select id="country" required>
+                <option value="">Select Country</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Singapore">Singapore</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="city">City</label>
+              <select id="city" required>
+                <option value="">Select Market Type</option>
+                <option value="tier1">Tier 1 City (Major City)</option>
+                <option value="tier2">Tier 2 City (Developing City)</option>
+                <option value="tier3">Tier 3 City (Emerging Area)</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="budget">Budget (USD)</label>
+              <input type="number" id="budget" placeholder="e.g. 5000 (USD)" required />
+            </div>
+
+            <div class="field-group">
+              <label for="target_customer">Target Customer</label>
+              <select id="target_customer" required>
+                <option value="">Select Target Customer</option>
+                <option value="students">Students</option>
+                <option value="young professionals">Young Professionals</option>
+                <option value="families">Families</option>
+                <option value="tourists">Tourists</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="competitor_level">Competition Level</label>
+              <select id="competitor_level" required>
+                <option value="">Select Competition Level</option>
+                <option value="low">Low Competition</option>
+                <option value="medium">Medium Competition</option>
+                <option value="high">High Competition</option>
+              </select>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="secondary-btn" id="resetBtn">Reset</button>
+              <button type="submit" class="primary-btn" id="analyzeBtn">Analyze Business</button>
+            </div>
+          </form>
+        </div>
       </div>
-
-        <div class="field-group">
-          <label for="country">Country</label>
-          <select id="country" required>
-            <option value="">Select Country</option>
-            <option value="Thailand">Thailand</option>
-            <option value="Vietnam">Vietnam</option>
-            <option value="Indonesia">Indonesia</option>
-            <option value="Singapore">Singapore</option>
-          </select>
-        </div>
-
-        <div class="field-group">
-          <label for="city">City</label>
-          <select id="city" required>
-            <option value="">Select Market Type</option>
-            <option value="tier1">Tier 1 City (Major City)</option>
-            <option value="tier2">Tier 2 City (Developing City)</option>
-            <option value="tier3">Tier 3 City (Emerging Area)</option>
-          </select>
-        </div>
-
-        <div class="field-group">
-          <label for="budget">Budget (USD)</label>
-          <input type="number" id="budget" placeholder="e.g. 5000 (USD)" required />
-        </div>
-
-        <div class="field-group">
-          <label for="target_customer">Target Customer</label>
-          <select id="target_customer" required>
-            <option value="">Select Target Customer</option>
-            <option value="students">Students</option>
-            <option value="young professionals">Young Professionals</option>
-            <option value="families">Families</option>
-            <option value="tourists">Tourists</option>
-          </select>
-        </div>
-
-        <div class="field-group">
-          <label for="competitor_level">Competition Level</label>
-          <select id="competitor_level" required>
-            <option value="">Select Competition Level</option>
-            <option value="low">Low Competition</option>
-            <option value="medium">Medium Competition</option>
-            <option value="high">High Competition</option>
-          </select>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="secondary-btn" id="resetBtn">Reset</button>
-          <button type="submit" class="primary-btn" id="analyzeBtn">Analyze Business</button>
-        </div>
-      </form>
     </main>
 
     <aside class="insight-panel">

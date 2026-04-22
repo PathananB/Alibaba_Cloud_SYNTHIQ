@@ -84,15 +84,16 @@ def convert_inputs_to_features(data):
             "tier3": 55
         }.get(x.lower(), 60)
 
+
     def fin(b):
         if b >= 10000:
             return 85
         elif b >= 5000:
             return 70
         elif b >= 2000:
-        return 55
-    else:
-        return 35
+            return 55
+        else:
+            return 35
 
     return {
         "demographic": demo(data["target_customer"]),

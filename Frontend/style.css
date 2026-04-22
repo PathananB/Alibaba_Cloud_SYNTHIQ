@@ -30,10 +30,10 @@ body {
 .screen {
   width: 100%;
   background: #000;
-  border: 2px solid rgba(255,255,255,0.4);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 34px 34px 8px 8px;
   padding: 28px 28px 36px;
-  box-shadow: 0 15px 60px rgba(255,255,255,0.08);
+  box-shadow: 0 15px 60px rgba(255, 255, 255, 0.08);
 }
 
 .brand-box {
@@ -81,7 +81,7 @@ body {
   max-width: 420px;
   font-size: 1rem;
   line-height: 1.8;
-  color: rgba(255,255,255,0.84);
+  color: rgba(255, 255, 255, 0.84);
   margin-bottom: 34px;
 }
 
@@ -112,7 +112,7 @@ body {
 .secondary {
   background: transparent;
   color: #ffffff;
-  border: 2px solid rgba(255,255,255,0.82);
+  border: 2px solid rgba(255, 255, 255, 0.82);
 }
 
 .btn:hover {
@@ -131,7 +131,7 @@ body {
   max-width: 640px;
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(13, 28, 134, 0.65), rgba(11, 21, 92, 0.75));
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 24px;
 }
 
@@ -144,14 +144,14 @@ body {
 
 .stat-card {
   background: linear-gradient(135deg, rgba(161, 112, 255, 0.35), rgba(51, 212, 255, 0.18));
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 18px;
   padding: 18px;
 }
 
 .stat-card .label {
   display: block;
-  color: rgba(255,255,255,0.72);
+  color: rgba(255, 255, 255, 0.72);
   font-size: 0.92rem;
   margin-bottom: 6px;
 }
@@ -178,8 +178,8 @@ body {
 .line-chart,
 .bar-chart,
 .bottom-table {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 18px;
 }
 
@@ -187,9 +187,9 @@ body {
   min-height: 230px;
   position: relative;
   background:
-    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px),
-    rgba(255,255,255,0.05);
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    rgba(255, 255, 255, 0.05);
   background-size: 100% 25%, 20% 100%, auto;
 }
 
@@ -202,11 +202,30 @@ body {
   z-index: 2;
 }
 
-.p1 { left: 12%; bottom: 24%; }
-.p2 { left: 28%; bottom: 43%; }
-.p3 { left: 46%; bottom: 35%; }
-.p4 { left: 66%; bottom: 61%; }
-.p5 { left: 84%; bottom: 74%; }
+.p1 {
+  left: 12%;
+  bottom: 24%;
+}
+
+.p2 {
+  left: 28%;
+  bottom: 43%;
+}
+
+.p3 {
+  left: 46%;
+  bottom: 35%;
+}
+
+.p4 {
+  left: 66%;
+  bottom: 61%;
+}
+
+.p5 {
+  left: 84%;
+  bottom: 74%;
+}
 
 .line {
   position: absolute;
@@ -259,11 +278,25 @@ body {
   background: linear-gradient(180deg, #47dfff, #775bff);
 }
 
-.b1 { height: 68px; }
-.b2 { height: 120px; }
-.b3 { height: 168px; }
-.b4 { height: 104px; }
-.b5 { height: 142px; }
+.b1 {
+  height: 68px;
+}
+
+.b2 {
+  height: 120px;
+}
+
+.b3 {
+  height: 168px;
+}
+
+.b4 {
+  height: 104px;
+}
+
+.b5 {
+  height: 142px;
+}
 
 .bottom-table {
   padding: 14px 18px;
@@ -274,8 +307,8 @@ body {
   grid-template-columns: 1.2fr 1fr 0.8fr;
   gap: 12px;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.88);
   font-size: 0.95rem;
 }
 
@@ -284,7 +317,7 @@ body {
 }
 
 .table-row.header {
-  color: rgba(255,255,255,0.58);
+  color: rgba(255, 255, 255, 0.58);
   font-size: 0.85rem;
   font-weight: 600;
 }
