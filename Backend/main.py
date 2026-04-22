@@ -180,10 +180,8 @@ def ask_qwen(prompt: str):
 def analyze(data: BusinessInput):
     d = data.dict()
 
-    # แปลง input จากฟอร์ม -> features
     features = convert_inputs_to_features(d)
 
-    # ใช้ model ทำนาย score
     model_input = np.array([[
         features["demographic"],
         features["trend"],
@@ -196,24 +194,35 @@ def analyze(data: BusinessInput):
     score = float(model.predict(model_input)[0])
     score = round(score, 2)
 
-    # หา risk จาก score
     risk = get_risk(score)
 
     strengths = build_strengths(d, features)
     risks = build_risks(d, features)
     recommendations = build_recommendations(d, features)
 
-    # ส่ง score จริงไปให้ Qwen อธิบาย
     prompt = build_qwen_prompt(d, features, score, risk)
     qwen_result = ask_qwen(prompt)
 
-    return {
-        "score": score,
-        "risk": risk,
-        "features": features,
-        "strengths": strengths,
-        "risks": risks,
-        "recommendations": recommendations,
-        "message": qwen_result.get("message", ""),
-        "summary": qwen_result.get("summary", "")
+    breakdown = {
+        "Demographic Fit": features["demographic"],
+        "Trend Momentum": features["trend"],
+        "Macro Stability": features["macro"],
+        "Competition Score": features["competition"],
+        "Location Potential": features["location"],
+        "Financial Readiness": features["financial"]
+    }
+
+return {
+    "score": score,
+    "risk": risk,
+    "summary": qwen_result.get("summary", ""),
+    "message": qwen_result.get("message", ""),
+    "features": {
+        "demographic": features["demographic"],
+        "trend": features["trend"],
+        "macro": features["macro"],
+        "competition": features["competition"],
+        "location": features["location"],
+        "financial": features["financial"]
+    }
 }

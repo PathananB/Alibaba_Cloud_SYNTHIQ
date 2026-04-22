@@ -114,10 +114,50 @@ function addMessageToCurrentChat(sender, text) {
   renderRecentChats();
 }
 
+function formatUserMessage(text) {
+  const emojiMap = {
+    business: "📊",
+    location: "📍",
+    budget: "💰",
+    target: "🎯",
+    competition: "⚔️"
+  };
+
+  return text
+    .split("\n")
+    .map((line) => {
+      const cleanLine = line.trim();
+      if (!cleanLine) return "";
+
+      const parts = cleanLine.split(":");
+      if (parts.length < 2) {
+        return `<span class="user-line">${cleanLine}</span>`;
+      }
+
+      const label = parts.shift().trim();
+      const value = parts.join(":").trim();
+      const emoji = emojiMap[label.toLowerCase()] || "📝";
+
+      return `
+        <span class="user-line">
+          <span class="user-label">${emoji} ${label}:</span>${value}
+        </span>
+      `;
+    })
+    .join("");
+}
+
+
 function addUserMessage(text, shouldSave = true) {
   const div = document.createElement("div");
   div.className = "message user";
-  div.innerHTML = `<div class="bubble">${text.replace(/\n/g, "<br>")}</div>`;
+
+  div.innerHTML = `
+    <div class="bubble">
+      <div class="user-text">${formatUserMessage(text)}</div>
+    </div>
+  `;
+
   chatArea.appendChild(div);
   chatArea.scrollTop = chatArea.scrollHeight;
 
@@ -235,12 +275,75 @@ function getPayloadFromForm() {
   };
 }
 
+function updateScoreBreakdown(breakdown) {
+  const data = {
+    demographic: Number(breakdown?.demographic ?? 0),
+    trend: Number(breakdown?.trend ?? 0),
+    macro: Number(breakdown?.macro ?? 0),
+    competition: Number(breakdown?.competition ?? 0),
+    location: Number(breakdown?.location ?? 0),
+    financial: Number(breakdown?.financial ?? 0)
+  };
+
+  document.getElementById("demographicScore").textContent = data.demographic || "--";
+  document.getElementById("trendScore").textContent = data.trend || "--";
+  document.getElementById("macroScore").textContent = data.macro || "--";
+  document.getElementById("competitionScore").textContent = data.competition || "--";
+  document.getElementById("locationScore").textContent = data.location || "--";
+  document.getElementById("financialScore").textContent = data.financial || "--";
+
+  document.getElementById("demographicBar").style.width = `${data.demographic}%`;
+  document.getElementById("trendBar").style.width = `${data.trend}%`;
+  document.getElementById("macroBar").style.width = `${data.macro}%`;
+  document.getElementById("competitionBar").style.width = `${data.competition}%`;
+  document.getElementById("locationBar").style.width = `${data.location}%`;
+  document.getElementById("financialBar").style.width = `${data.financial}%`;
+}
+
+function resetScoreBreakdown() {
+  const scoreIds = [
+    "demographicScore",
+    "trendScore",
+    "macroScore",
+    "competitionScore",
+    "locationScore",
+    "financialScore"
+  ];
+
+  const barIds = [
+    "demographicBar",
+    "trendBar",
+    "macroBar",
+    "competitionBar",
+    "locationBar",
+    "financialBar"
+  ];
+
+  scoreIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = "--";
+  });
+
+  barIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.style.width = "0%";
+  });
+}
+
 function resetForm() {
   chatForm.reset();
   scoreValue.textContent = "--";
   riskValue.textContent = "--";
   reportSummary.textContent =
     "The AI-generated business summary will appear here and can later be expanded in the report page.";
+
+  riskValue.style.background = "";
+  riskValue.style.color = "";
+  riskValue.style.fontWeight = "";
+  riskValue.style.padding = "";
+  riskValue.style.borderRadius = "";
+
+  resetScoreBreakdown();
 }
 
 function fillPreset(type) {
@@ -301,14 +404,6 @@ function createNewChat() {
   renderSavedMessages();
   renderRecentChats();
   resetForm();
-
-  if (riskValue) {
-    riskValue.style.background = "";
-    riskValue.style.color = "";
-    riskValue.style.fontWeight = "";
-    riskValue.style.padding = "";
-    riskValue.style.borderRadius = "";
-  }
 }
 
 if (chatForm) {
@@ -317,12 +412,11 @@ if (chatForm) {
 
     const payload = getPayloadFromForm();
 
-    const userText = `
-    ▪ Business: ${payload.business_type}
-    ▪ Location: ${payload.city}, ${payload.country}
-    ▪ Budget: ${formatMoney(payload.budget)}
-    ▪ Target: ${payload.target_customer}
-    ▪ Competition: ${payload.competitor_level}`;
+    const userText = `Business: ${payload.business_type}
+Location: ${payload.city}, ${payload.country}
+Budget: ${formatMoney(payload.budget)}
+Target: ${payload.target_customer}
+Competition: ${payload.competitor_level}`;
 
     addUserMessage(userText);
 
@@ -349,6 +443,9 @@ if (chatForm) {
 
       addAiMessage(`📊 Investment Analysis Result
 
+Score: ${data.score}
+Risk: ${data.risk}
+
 ${data.message}`);
 
       scoreValue.textContent = data.score ?? "--";
@@ -356,6 +453,16 @@ ${data.message}`);
       setTimeout(() => {
         scoreValue.style.transform = "scale(1)";
       }, 200);
+
+      const breakdownData = data.breakdown || data.features || {
+        demographic: 80,
+        trend: 78,
+        macro: 68,
+        competition: 40,
+        location: 85,
+        financial: 72
+      };
+      updateScoreBreakdown(breakdownData);
 
       riskValue.textContent = data.risk ?? "--";
       riskValue.style.background =
@@ -377,25 +484,16 @@ ${data.message}`);
           timestamp: new Date().toLocaleString()
         })
       );
-
-      addAiMessage(
-        `**Analysis Updated**
-- Score: ${data.score ?? "--"}
-- Risk: ${data.risk ?? "--"}
-- Summary: ${data.summary ?? "No summary available."}`,
-        "highlight"
-      );
     } catch (err) {
       loading.remove();
       setLoadingState(false);
       console.error(err);
 
-      addAiMessage(
-        `**Connection Error**
-- Unable to connect to backend
-- Please make sure FastAPI is running
-- Check that the API URL is correct`
-      );
+      addAiMessage(`❌ Connection Error
+
+- Cannot connect to backend
+- Make sure FastAPI is running
+- Check API URL`);
     }
   });
 }
@@ -423,4 +521,5 @@ if (newChatBtn) {
 document.addEventListener("DOMContentLoaded", () => {
   renderSavedMessages();
   renderRecentChats();
+  resetScoreBreakdown();
 });
