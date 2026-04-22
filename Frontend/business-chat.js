@@ -12,14 +12,14 @@ const formShell = document.getElementById("formShell");
 const toggleFormBtn = document.getElementById("toggleFormBtn");
 const toggleFormText = document.getElementById("toggleFormText");
 
-if (formShell && toggleFormBtn && toggleFormText) {
+if (formShell && toggleFormBtn && toggleFormText){
   toggleFormBtn.addEventListener("click", () => {
     formShell.classList.toggle("collapsed");
 
     if (formShell.classList.contains("collapsed")) {
       toggleFormText.textContent = "Show Form";
     } else {
-      toggleFormText.textContent = "Hide Form";
+        toggleFormText.textContent = "Hide Form";
     }
   });
 }
@@ -86,7 +86,7 @@ function getPayloadFromForm() {
     business_type: document.getElementById("business_type").value,
     country: document.getElementById("country").value,
     city: document.getElementById("city").value,
-    budget: Number(document.getElementById("budget").value) || 100000,
+    budget: Number(document.getElementById("budget").value),
     target_customer: document.getElementById("target_customer").value,
     competitor_level: document.getElementById("competitor_level").value
   };
@@ -103,38 +103,38 @@ function resetForm() {
 function fillPreset(type) {
   const presets = {
     starter: {
-      business_type: "restaurant",
-      country: "Thailand",
-      city: "Bangkok",
-      budget: 150000,
-      target_customer: "young professionals",
-      competitor_level: "medium"
-    },
-    coffee: {
-      business_type: "coffee shop",
-      country: "Thailand",
-      city: "Chiang Mai",
-      budget: 120000,
-      target_customer: "students",
-      competitor_level: "high"
-    },
-    fashion: {
-      business_type: "fashion",
-      country: "Vietnam",
-      city: "Ho Chi Minh City",
-      budget: 200000,
-      target_customer: "young professionals",
-      competitor_level: "medium"
-    },
-    bubble: {
-      business_type: "bubble tea",
-      country: "Singapore",
-      city: "Bangkok",
-      budget: 90000,
-      target_customer: "students",
-      competitor_level: "high"
-    }
-  };
+    business_type: "restaurant",
+    country: "Thailand",
+    city: "tier1",
+    budget: 150000,
+    target_customer: "young professionals",
+    competitor_level: "medium"
+  },
+  coffee: {
+    business_type: "coffee shop",
+    country: "Thailand",
+    city: "tier2",
+    budget: 120000,
+    target_customer: "students",
+    competitor_level: "high"
+  },
+  fashion: {
+    business_type: "fashion",
+    country: "Vietnam",
+    city: "tier1",
+    budget: 200000,
+    target_customer: "young professionals",
+    competitor_level: "medium"
+  },
+  bubble: {
+    business_type: "bubble tea",
+    country: "Singapore",
+    city: "tier1",
+    budget: 90000,
+    target_customer: "students",
+    competitor_level: "high"
+  }
+};
 
   const preset = presets[type];
   if (!preset) return;

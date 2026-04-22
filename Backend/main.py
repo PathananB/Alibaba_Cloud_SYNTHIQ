@@ -8,6 +8,13 @@ from dotenv import load_dotenv
 import joblib
 import numpy as np
 import re
+from scoring import (
+    convert_inputs_to_features,
+    get_risk,
+    build_strengths,
+    build_risks,
+    build_recommendations,
+)
 
 load_dotenv()
 
@@ -16,10 +23,10 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # โหลด model
 model = joblib.load("model.pkl")
 
@@ -83,9 +90,9 @@ def convert_inputs_to_features(data):
         elif b >= 5000:
             return 70
         elif b >= 2000:
-            return 55
-        else:
-            return 35
+        return 55
+    else:
+        return 35
 
     return {
         "demographic": demo(data["target_customer"]),
@@ -191,6 +198,10 @@ def analyze(data: BusinessInput):
     # หา risk จาก score
     risk = get_risk(score)
 
+    strengths = build_strengths(d, features)
+    risks = build_risks(d, features)
+    recommendations = build_recommendations(d, features)
+
     # ส่ง score จริงไปให้ Qwen อธิบาย
     prompt = build_qwen_prompt(d, features, score, risk)
     qwen_result = ask_qwen(prompt)
@@ -199,6 +210,9 @@ def analyze(data: BusinessInput):
         "score": score,
         "risk": risk,
         "features": features,
+        "strengths": strengths,
+        "risks": risks,
+        "recommendations": recommendations,
         "message": qwen_result.get("message", ""),
         "summary": qwen_result.get("summary", "")
-    }
+}
