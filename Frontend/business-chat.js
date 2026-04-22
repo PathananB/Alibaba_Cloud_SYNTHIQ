@@ -492,6 +492,8 @@ Competition: ${payload.competitor_level}`;
       addAiMessage(data.message);
       addAiMessage(formatAiSummaryCard(data), "", true, true);
 
+      saveReportToCurrentChat(data, payload);
+
       scoreValue.textContent = data.score ?? "--";
       scoreValue.style.transform = "scale(1.1)";
       setTimeout(() => {
@@ -513,14 +515,21 @@ Competition: ${payload.competitor_level}`;
 
       reportSummary.textContent = data.summary ?? "No summary available.";
 
-      localStorage.setItem(
-        "synthiqReport",
-        JSON.stringify({
+      function saveReportToCurrentChat(data, input) {
+        const chats = getChats();
+        const currentId = getCurrentChatId();
+        const chat = chats.find(c => c.id === currentId);
+
+        if (!chat) return;
+
+        chat.report = {
           ...data,
-          input: payload,
+          input,
           timestamp: new Date().toLocaleString()
-        })
-      );
+        };
+
+        saveChats(chats);
+      }
     } catch (err) {
       loading.remove();
       setLoadingState(false);

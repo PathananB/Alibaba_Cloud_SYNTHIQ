@@ -141,4 +141,31 @@ body {
   .report-header p {
     color: #000;
   }
+
+  .report-line {
+  color: rgba(7, 7, 7, 0.85);
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+}
+
+.report-section-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #ffffff;
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+
+.report-line {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+
+.report-bullet {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.8;
+  margin-left: 10px;
+  margin-bottom: 6px;
 }

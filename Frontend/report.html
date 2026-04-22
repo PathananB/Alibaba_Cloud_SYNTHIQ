@@ -24,9 +24,9 @@
     <main class="report-container">
       <section class="report-card">
         <h2>Business Opportunity Overview</h2>
-        <p id="overviewText">
+        <div id="overviewText">
           No generated data yet. Start a conversation in Business Chat to generate a business opportunity report.
-        </p>
+        </div>
       </section>
 
       <section class="grid-section">
@@ -43,9 +43,9 @@
 
       <section class="report-card">
         <h2>Insight Report</h2>
-        <p id="insightText">
+        <div id="insightText">
           AI-generated insight summary will appear here after the business analysis is completed.
-        </p>
+        </div>
       </section>
 
       <section class="report-card">
@@ -61,13 +61,78 @@
   </div>
 
   <script>
-    const data = JSON.parse(localStorage.getItem("synthiqReport"));
+    function formatReportMessage(text) {
+      if (!text) {
+        return '<div class="report-line">No generated data yet.</div>';
+      }
+
+      let clean = String(text)
+        .replace(/^\s*\{\s*/, "")
+        .replace(/\s*\}\s*$/, "")
+        .replace(/^"message"\s*:\s*/, "")
+        .replace(/\\"/g, '"')
+        .replace(/\\n/g, "\n")
+        .replace(/\r\n/g, "\n")
+        .trim();
+
+      const lines = clean
+        .split("\n")
+        .map(line => line.trim())
+        .filter(Boolean);
+
+      let html = "";
+
+      lines.forEach((line) => {
+        if (line.startsWith("📊 Investment Score:")) {
+          html += `<div class="report-section-title">📊 Investment Score</div>`;
+          html += `<div class="report-line">${line.replace("📊 Investment Score:", "").trim()}</div>`;
+        } else if (line.startsWith("💡 Overview:")) {
+          html += `<div class="report-section-title">💡 Overview</div>`;
+        } else if (line.startsWith("✅ Strengths:")) {
+          html += `<div class="report-section-title">✅ Strengths</div>`;
+        } else if (line.startsWith("⚠ Risks:") || line.startsWith("△ Risks:")) {
+          html += `<div class="report-section-title">⚠ Risks</div>`;
+        } else if (line.startsWith("🚀 Recommendations:")) {
+          html += `<div class="report-section-title">🚀 Recommendations</div>`;
+        } else if (line.startsWith("-")) {
+          html += `<div class="report-bullet">• ${line.substring(1).trim()}</div>`;
+        } else {
+          html += `<div class="report-line">${line}</div>`;
+        }
+      });
+
+      return html || '<div class="report-line">No generated data yet.</div>';
+    }
+
+    function formatSummaryText(text) {
+      if (!text) {
+        return "AI-generated insight summary will appear here after the business analysis is completed.";
+      }
+      return String(text).replace(/\\"/g, '"').trim();
+    }
+
+    function getChats() {
+      return JSON.parse(localStorage.getItem("synthiq_chat_sessions")) || [];
+    }
+
+    function getCurrentChatId() {
+      return localStorage.getItem("synthiq_current_chat_id");
+    }
+
+    const chats = getChats();
+    const currentId = getCurrentChatId();
+    const chat = chats.find(c => c.id === currentId);
+
+    const data = chat?.report || null;
 
     if (data) {
-      document.getElementById("overviewText").textContent = data.message;
-      document.getElementById("reportScore").textContent = data.score;
-      document.getElementById("reportRisk").textContent = data.risk;
-      document.getElementById("insightText").textContent = data.summary;
+      document.getElementById("overviewText").innerHTML = formatReportMessage(data.message);
+      document.getElementById("reportScore").textContent = data.score ?? "--";
+      document.getElementById("reportRisk").textContent = data.risk ?? "--";
+      document.getElementById("insightText").textContent = formatSummaryText(data.summary);
+    } else {
+      document.getElementById("overviewText").innerHTML =
+        '<div class="report-line">No report for this chat yet.</div>';
     }
   </script>
 </body>
