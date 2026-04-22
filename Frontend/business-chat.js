@@ -153,11 +153,11 @@ chatForm.addEventListener("submit", async (e) => {
   const payload = getPayloadFromForm();
 
   addUserMessage(`
-📌 Business: ${payload.business_type}
-🌍 Location: ${payload.city}, ${payload.country}
-💰 Budget: ${formatMoney(payload.budget)}
-🎯 Target: ${payload.target_customer}
-⚔ Competition: ${payload.competitor_level}
+▪ Business: ${payload.business_type}
+▪ Location: ${payload.city}, ${payload.country}
+▪ Budget: ${formatMoney(payload.budget)}
+▪ Target: ${payload.target_customer}
+▪ Competition: ${payload.competitor_level}
 `);
 
   const loading = document.createElement("div");

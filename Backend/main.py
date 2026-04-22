@@ -83,9 +83,9 @@ def convert_inputs_to_features(data):
         elif b >= 5000:
             return 70
         elif b >= 2000:
-        return 55
-    else:
-        return 35
+            return 55
+        else:
+            return 35
 
     return {
         "demographic": demo(data["target_customer"]),

@@ -290,9 +290,10 @@ body {
 }
 
 .message.user {
-  align-self: flex-end;
   justify-content: flex-end;
-  max-width: 58%;
+  align-items: flex-start;
+  margin: 0;
+  max-width: 100%;
 }
 
 .avatar {
@@ -324,12 +325,43 @@ body {
 }
 
 .message.user .bubble {
-  width: 100%;
-  background: linear-gradient(135deg, var(--secondary), var(--primary));
-  color: #00152f;
-  font-weight: 500;
-  border-top-right-radius: 6px;
-  white-space: pre-line;
+  display: inline-block;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: #000;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 70%;
+  line-height: 1.35;
+  margin: 0;
+  vertical-align: top;
+}
+
+/* ล้างช่องว่างบน-ล่างของ element ข้างในทั้งหมด */
+.message.user .bubble > *:first-child {
+  margin-top: 0 !important;
+}
+
+.message.user .bubble > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+.message.user .bubble p,
+.message.user .bubble ul,
+.message.user .bubble ol,
+.message.user .bubble li,
+.message.user .bubble strong,
+.message.user .bubble span {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.message.user .bubble ul,
+.message.user .bubble ol {
+  padding-left: 18px;
+}
+
+.message.user .bubble br:first-child {
+  display: none;
 }
 
 /* FORM SHELL */
