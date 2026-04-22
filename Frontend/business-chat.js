@@ -437,6 +437,7 @@ Competition: ${payload.competitor_level}`;
 
     try {
       const data = await sendToBackend(payload);
+      console.log(data);
 
       loading.remove();
       setLoadingState(false);
@@ -454,21 +455,14 @@ ${data.message}`);
         scoreValue.style.transform = "scale(1)";
       }, 200);
 
-      const breakdownData = data.breakdown || data.features || {
-        demographic: 80,
-        trend: 78,
-        macro: 68,
-        competition: 40,
-        location: 85,
-        financial: 72
-      };
+      const breakdownData = data.features;
       updateScoreBreakdown(breakdownData);
 
       riskValue.textContent = data.risk ?? "--";
       riskValue.style.background =
         data.risk === "Low" ? "#00c853" :
-        data.risk === "Medium" ? "#ffab00" :
-        "#d50000";
+          data.risk === "Medium" ? "#ffab00" :
+            "#d50000";
       riskValue.style.color = "#000";
       riskValue.style.fontWeight = "700";
       riskValue.style.padding = "6px 12px";
@@ -523,3 +517,5 @@ document.addEventListener("DOMContentLoaded", () => {
   renderRecentChats();
   resetScoreBreakdown();
 });
+
+
