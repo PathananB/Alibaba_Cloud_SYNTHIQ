@@ -317,11 +317,12 @@ if (chatForm) {
 
     const payload = getPayloadFromForm();
 
-    const userText = `Business: ${payload.business_type}
-Location: ${payload.city}, ${payload.country}
-Budget: ${formatMoney(payload.budget)}
-Target: ${payload.target_customer}
-Competition: ${payload.competitor_level}`;
+    const userText = `
+    ▪ Business: ${payload.business_type}
+    ▪ Location: ${payload.city}, ${payload.country}
+    ▪ Budget: ${formatMoney(payload.budget)}
+    ▪ Target: ${payload.target_customer}
+    ▪ Competition: ${payload.competitor_level}`;
 
     addUserMessage(userText);
 
